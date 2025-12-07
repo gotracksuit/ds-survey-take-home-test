@@ -1,95 +1,120 @@
-# Tracksuit - Data Scientist (Survey) Interview: Technical Take Home
+# Tracksuit Survey Allocation Take-Home
 
-Hello, and thanks for taking the time to interview with us at Tracksuit! This is
-a take-home exercise we'd like you to complete. This is an open-ended problem
-that is designed to showcase your thoughtfulness and creativity. To avoid
-spending too much time on this task, we encourage you to timebox your work to a 
-few hours.
+**Author:** [Nastaran]  
+**Date:** [8/12/2025]  
 
-<!-- deno-fmt-ignore-start -->
-> [!Note]
-> This task is meant to give us something to talk over in your technical
-> interview. It is a challenging but realistic example of the kind of
-> problems you may tackle at Tracksuit and you're encouraged to use AI
-> to assist you. Finally, remember: Nothing is designed to trick you.
-> If you have any questions, please reach out! 
-<!-- deno-fmt-ignore-end -->
+---
+
+## Overview
+
+This repository provides a solution to the Tracksuit Data Scientist take-home task [problem.md](problem.md).  
+The goal is to allocate survey categories to respondents while:
+
+1. Achieving ≥ 200 qualified respondents per category.
+2. Ensuring mean survey time per respondent ≤ 480 seconds (8 minutes).
+3. Maintaining demographic representativeness across gender, age, and region.
+
+Solution Architecture: Hybrid Planning and Execution
+For this task, I approached the problem using a combination of **Linear Programming (LP), greedy allocation, and Monte Carlo validation**. The LP optimizes the expected number of respondents per category-demographic cell to meet the target qualified completes while minimizing total respondents, ensuring expected demographic representativeness and average survey time constraints. The greedy heuristic provides a simpler, sequential allocation alternative that is easier to implement and works with integer respondents but may slightly over- or under-allocate. Monte Carlo validation then simulates the stochastic nature of qualification, showing how often the LP allocation actually meets the targets and survey time in practice. Together, this approach allows me to justify the allocation mathematically, check robustness under randomness, and demonstrate a practical allocation strategy suitable for real-world deployment.
+
+The solution includes:
+
+- **LP optimizer** for expected-value allocation.
+- **Monte Carlo validation** for stochastic outcomes.
+- **Greedy allocator** for comparison.
+- **Validation module** to check all constraints.
+
+---
+
+## Files / Modules
+
+- `main.py`  
+  Orchestrates the workflow: load data, run optimizer, validate results, and run Monte Carlo validation.
+
+- `optimizer/`  
+  - `optimizer.py`: solves the problem in two ways:
+                        - Eexpected-value Linear Program allocation
+                        - Sequential greedy heuristic
+
+- `validation/`  
+  - checks if optimizers meets qualified targets, mean survey time, and demographic representativeness.
+
+- `monte_carlo_validation/`  
+  - Performs stochastic simulations using Bernoulli trials per category.
+
+- `demographic/`  
+  - `load_demographics.py`: generates demographic cells and population shares.
+
+- `config.py`  
+  Stores constants such as `TARGET_QUALIFIED`, `MAX_MEAN_TIME`, and demographic distributions.
+
+---
+
+## Assumptions
+
+1. Incidence rates are assumed constant across demographics.  
+2. Each respondent may answer multiple categories; the **total survey time** should not exceed 480 seconds.  
+3. Demographic representativeness is **relaxed** for simplicity; exposure roughly follows national shares.  
+4. Category qualifier time is negligible (0 seconds).  
+5. LP allocation is treated as **expected-value**; Monte Carlo validates stochastic outcomes.
+
+---
+
+## Workflow
+
+1. Load category data (`fake_category_data.csv`) and demographic cells.  
+2. Solve expected-value LP allocation to **minimize total respondents**:
+   - Ensure expected qualified completes ≥ `TARGET_QUALIFIED`.
+   - Optionally include demographic weights (relaxed).
+   - Ensure mean survey time ≤ `MAX_MEAN_TIME`.
+3. Validate allocation using `validate_solution.py`:
+   - **Proof 1:** Qualified Target (≥200).  
+   - **Proof 2:** Mean Time Constraint (≤480s).  
+   - **Proof 3:** Demographic Representativeness (within tolerance).
+4. Run `monte_carlo_validate.py` to simulate stochastic qualification:
+   - Check mean qualified ± std deviation per category.
+   - Validate expected mean survey time.
+   - Assess probability of meeting all constraints.
+5. Run Greedy allocation
+6. Validate greedy allocation
+
+---
+
+## Interpretation of Results
+
+- LP allocation ensures that each category meets its target qualified respondents while respecting the mean survey time constraint.  
+- Monte Carlo provides stochastic proof that targets are met with high probability.  
+- The greedy allocator provides a practical alternative for comparison and can be used in production when dynamic, real-time allocation of respondents is required.  
+- **Relaxed demographic assumption:** exact quota per cell is not strictly enforced, but exposure roughly matches national distribution.
 
 
-## Background
+---
 
-Surveys are the heart of Tracksuit's operation. The way they are designed 
-affects our ability to develop new products, build trust with our customers, 
-and improve our cash flow. As Tracksuit continues to scale, automated 
-optimisation becomes an increasingly important contributor to our business.
+## Installation
 
-One of the core functions of the survey team is to ensure that every customer 
-gets the sample size they need, while minimising surveying costs and 
-respecting the attention span of survey respondents. 
+This project uses **Poetry** for dependency management.
 
-This is tricky for three reasons:
+1. Install Poetry (if not already installed):
 
-1. **Every customer has a different category with a different incidence (qualifying) rate.**
+```bash
+# macOS/Linux
+curl -sSL https://install.python-poetry.org | python3 -
 
-At Tracksuit, we guarantee each customer n=200 respondents that qualify for their category each month. When different categories have different incidence rates, we need to ask the category’s qualifying question to different numbers of respondents to get the same final result. 
-For example, if the Honey category has a 20% incidence rate and the Chips category has a 80% incidence rate, we’ll need to ask roughly 200/20%=1000 respondents the qualifying question for Honey, while we only need to ask roughly 200/80%=250 respondents the qualifying question for Chips.
+# Windows (PowerShell)
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 
-2. **Every customer’s survey length is different.**
+    Install dependencies:
 
-While we ensure that every customer starts with the same standard set of questions, we allow customers the ability to add questions to their category to measure their unique brand goals. This means that, while basic categories might only last 45 seconds, a fully-fledge survey could take up to 3 minutes to complete.
 
-3. **The mean respondent can only have 8 minutes of questions.**
+poetry install
 
-To ensure that respondents are engaged for the length of the survey, we restrict the total survey length to 8 minutes per respondent. This means that we can’t ask infinite questions (or the same set number of categories) to every respondent. We’ll have to dynamically adjust based on the categories that they qualify for.
-The demographic distribution of the sample that is exposed to each category’s qualifier should be representative of the national population.
-While the demographic composition of those who qualify for each category will naturally vary (for example, the sample of those who qualify for “Men’s Clothing” will naturally skew more male than those for “Women’s Clothing), we want to make sure that those who had the chance to qualify are nationally representative. 
 
-In this task, imagine you’re a Data Scientist at Tracksuit designing 
-an algorithmic solution to this problem.
+## How to Run
 
-## The Task
+1. Configure demographic shares in `config.py`.  
+2. Ensure `fake_category_data.csv` is available in the working directory.  
+3. Run `main.py`:
 
-The goal of this take-home task is to minimise the total number of respondents surveyed (our "cost") by designing, implementing, and validating an algorithm to automatically allocate categories to respondents while respecting the following constraints:
-- Every category should receive roughly 200 qualified respondents (we're modelling one month). In contracts, we specify that customers will receive at least 2,400 qualified respondents per year.
-- The mean respondents should have a total interview length of less than 480 seconds (8 minutes). This limit exists for two reasons: 1) to maintain data quality - we believe that respondent engagement starts to drop rapidly after an 8 minute survey - and, 2) because it's stipulated in our contractual agreement with our sample provider.
-*For simplicity, you may assume that the category qualifier consumes none of a respondent's time (0 seconds).*
-- The demographic distribution of the sample exposed to each category's qualifiers should match that of the national population (At Tracksuit, we quota for at least the gender, age, and region variables). We require this to avoid respondent bias and maintain best-in-class research practice.
-
-Since we'll be reviewing your work asynchronously, please ensure all work is committed to this repository. You're welcome to use your programming language and framework of choice but please ensure your full solution is reproducible from your code. 
-
-You're also more than welcome to use any AI tools (e.g. Cursor or Claude Code) to help you with this take home task, similarly to how you would as an employee at Tracksuit. However, similarly to any code you write at Tracksuit, you will be responsible for the quality of your code and your results. Make sure you can interpret and explain any code, assumptions, and results that you commit to this repository. Please note that we will be comparing your results to a naive Claude Code solution based on this repository. Your job is to inject additional insight or intuition that leads to outsized performance. 
-
-Validation is a critical part of this feature. As part of your submission, you should provide clear proof that your algorithm achieves each of the constraints listed above, using at least the `fake_category_data.csv` file.
-
-If you find that a full solution takes you more time than you have available, you may choose to add simplifying assumptions or relax set constraints to assist in your solution, as long as you justify your decision from both a customer and technical perspective in your presentation. This, too, will help us understand how you think about product scope and technical trade-offs.
-
-To help you with this task, we have provided the following description of the data generating process.
-
-### Understanding Categories
-
-Tracksuit categories are defined by a category qualifier. This is a question that specifies the purchase behavior required to "qualify" for the category. For example, the `Fast Food` category has the following category qualifier: "In the past 3 months have you purchased fast-food? (Note: this includes quick and convenient options such as sandwiches/wraps, pizza, burritos, salads, and burgers, etc)"
-
-Each category qualifier also comes with a set of answer options. For the `Fast Food` category above, the answer options are:
-- "Yes" (`Qualifying`), and 
-- "No"
-
-The `Qualifying` label indicates that survey respondents who select "Yes" qualify for the category.
-
-By deploying the category qualifier with its associated answer options to a survey, we can measure the category's incidence rate. The incidence rate is the estimated percentage of the population that qualifies (selects a `Qualifying` response) to a given category qualifier. In the example above, we surveyed 8,952 people and 7,583 selected "Yes", leading to an estimated incidence rate of `7583/8952=84.71%`. 
-
-After a respondent "qualifies" for a category, they are then eligible to respond to the category's survey. At Tracksuit, this means the set of questions that the customer of the category requested. For simplicity, we have omitted the specific questions for this task and provided an estimated `category_length_seconds` variable to represent the expected time taken for the mean respondent to complete the category survey.
-
-For this task, assume that we guarantee customers at least n=2,400 qualified respondents who complete the category survey each year. Since we do monthly surveys, this translates to roughly n=200 per month. Of course, the number of respondents required to achieve the desired qualified respondents per month varies by incidence rate. For a category with an incidence rate of 10%, we'd need to survey roughly `200/10%=2000` respondents in order to receive 200 qualified respondents to complete the category survey. If a survey mechanism didn't require all qualifying survey respondents to complete the category survey, the required respondent number would increase even more.
-
-We provide an example of a set of categories and their associated information in the spreadsheet `fake_category_data.csv`. You may use this data to assist in validating your algorithm.
-
-Here is the associated data dictionary:
-
-**_Data dictionary_**
-- category_id: the unique id for a category
-- category_name: the name for the category
-- incidence_rate: the estimated proportion of respondents from a population who would select a `qualifying` response to the category qualifier. For simplicity, we have omitted the category qualifiers and answer options themselves.
-- category_length_seconds: the estimated time taken for the mean respondent to complete the category survey.
-
-We hope you enjoy this take home task. If you have any questions - please reach out! We look forward to reviewing your submission.
-
+```bash
+poetry install
+poetry run python main.py

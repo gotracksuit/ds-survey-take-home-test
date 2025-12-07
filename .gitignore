@@ -1,0 +1,11 @@
+# Python
+__pycache__
+venv
+env
+.env
+.pytest_cache
+*.eeg-info
+*.
+.mypy_cache
+
+data/
