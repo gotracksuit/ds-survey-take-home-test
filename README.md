@@ -103,11 +103,11 @@ curl -sSL https://install.python-poetry.org | python3 -
 # Windows (PowerShell)
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 
-    Install dependencies:
-
+# Install dependencies:
 
 poetry install
 
+```
 
 ## How to Run
 
@@ -116,5 +116,5 @@ poetry install
 3. Run `main.py`:
 
 ```bash
-poetry install
 poetry run python main.py
+```
