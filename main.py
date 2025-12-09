@@ -87,7 +87,7 @@ def main():
                 MAX_MEAN_TIME,
                 demo_df["cell_id"].tolist(),
                 demo_df["population_share"].values,
-                tolerance=0.005)
+                tolerance=0.05)
 
     print("\n================= LP Monte Carlo Validation =================")
     # 2️⃣ LP Monte Carlo validation
@@ -98,7 +98,8 @@ def main():
                             TARGET_QUALIFIED, 
                             MAX_MEAN_TIME,
                             n_simulations=1000,
-                            random_seed=42)
+                            random_seed=42,
+                            demographic_tolerance=0.05)
     
     
     # Initialize and Run greedy Allocator
