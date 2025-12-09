@@ -48,22 +48,47 @@ This report summarizes the allocation of survey categories to respondents using 
 
 ---
 
-## 4. Recommendations
+## 4. Monte Carlo Validation & Risk Assessment
+
+While the LP solution satisfies all constraints **in expectation**, real-world survey qualification is stochastic. To evaluate operational risk, **Monte Carlo simulations** were performed by repeatedly simulating respondent qualification as Bernoulli trials using each category’s incidence rate.
+
+Monte Carlo results in average:
+
+- Mean qualified completes: **≈200.4**  
+- 5th percentile: **≈180**  
+- Median: **≈200**  
+- 95th percentile: **≈220**  
+- Probability of missing target (< 200): **≈49%**
+
+### Interpretation
+
+- Although the expected number of qualified respondents is ≈200, almost **half of simulated months fail** to meet the contractual target.  
+- This reveals a **high-variance, high-risk categories** where planning to exactly 200 is statistically fragile.  
+- The LP solution alone does not expose this risk because it optimizes **expected values**, not outcome distributions.
+
+### Planning Implication
+
+- To reduce the probability of failure to an acceptable level (~5%), a **buffered planning target** is required.  
+- Based on variance, planning for approximately **220 expected qualified completes** (~10% buffer) would reduce failure probability from ~49% to ~5%.  
+
+
+## 5. Recommendations
 
 - **Use Greedy allocation for production deployments:** efficient, meets constraints, fewer respondents.  
-- **Use LP for planning and risk assessment:** helps understand worst-case scenarios, category-level cost forecasts, and potential bottlenecks.  
+- **Use LP + Monte Carlo for planning and risk assessment:** helps understand fragile categories, category-level cost forecasts, and potential bottlenecks.  
+- **Introduce category-specific buffers** for high-variance categories.  
 - **Monitor survey times and category incidence:** adjust heuristics dynamically to maintain efficiency.  
 - **Future improvement:** consider individual-level LP to further optimize respondent allocation in complex survey scenarios.  
 
 ---
 
-## 5. Summary
+## 6. Summary
 
-|      Aspect      |         LP          | Greedy |
-|------------------|---------------------|--------|
-| Respondent Count | High (overestimate) | Low (efficient) |
-| Mean Survey Time | 41s (per category) | 480s (per respondent) |
-| Constraints      | ✅ (demographics relaxed) | ✅ |
+| Aspect                 | LP                     | Greedy |
+|------------------------|-----------------------|--------|
+| Respondent Count       | High (overestimate)    | Low (efficient) |
+| Mean Survey Time       | 41s (per category)     | 480s (per respondent) |
+| Constraints            | ✅ (demographics relaxed) | ✅ |
 | Production Suitability | Planning / Stress-test | Daily allocation / Production |
 
-**Conclusion:** LP provides strategic insights and risk assessment, while Greedy is optimized for operational efficiency. Both methods complement each other to ensure cost-effective and constraint-compliant survey allocation.
+**Conclusion:** LP provides strategic insights and risk assessment, while Greedy is optimized for operational efficiency. Monte Carlo validation shows the risk in low-incidence categories and helps define safe planning buffers. Both methods complement each other to ensure cost-effective and constraint-compliant survey allocation.

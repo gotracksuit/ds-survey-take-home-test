@@ -35,6 +35,7 @@ def lp_monte_carlo_validate(
     random_seed : int
         RNG seed
     """
+    # monte_carlo_validation_summary.py
 
     rng = np.random.default_rng(random_seed)
     num_categories, num_cells = allocation.shape
@@ -48,7 +49,6 @@ def lp_monte_carlo_validate(
 
     for sim in range(n_simulations):
         total_time = 0.0
-        # simulate each respondent as Bernoulli trials
         for i in range(num_categories):
             for j in range(num_cells):
                 n_exposed = int(allocation[i, j])
@@ -62,18 +62,43 @@ def lp_monte_carlo_validate(
         mean_times[sim] = total_time / total_respondents
         demo_exposures[sim] = allocation.sum(axis=0) / total_respondents
 
-    # --- Aggregated results ---
+    # --- Summary statistics ---
     qualified_mean = qualified_results.mean(axis=0)
+    qualified_median = np.median(qualified_results, axis=0)
+    qualified_5th = np.percentile(qualified_results, 5, axis=0)
+    qualified_95th = np.percentile(qualified_results, 95, axis=0)
+    failure_prob = (qualified_results < target_qualified).mean(axis=0) * 100
+
     mean_time_avg = mean_times.mean()
     demo_mean = demo_exposures.mean(axis=0)
 
-    #
-    print("\n--- Monte Carlo Validation Results ---")
-    print("\nQualified Completes per Category (Mean over simulations):")
+    # --- Print report ---
+    print("\n--- Monte Carlo Validation Summary ---")
+    print(f"\nOverall mean survey time: {mean_time_avg:.2f}s (Max allowed: {max_mean_time}s)\n")
+
+    print("Qualified Completes per Category (summary):")
     for i, cat in enumerate(categories["category_name"]):
-        print(f"{cat}: {qualified_mean[i]:.1f} (Target: {target_qualified})")       
-    print(f"\nMean Interview Time: {mean_time_avg:.2f}s (Max Allowed: {max_mean_time}s)")
-    print("\nDemographic Exposure Shares (Mean over simulations):")
+        print(f"{cat}")
+        print(f"  Mean qualified   : {qualified_mean[i]:.1f}")
+        print(f"  Median           : {qualified_median[i]:.1f}")
+        print(f"  5th percentile   : {qualified_5th[i]:.1f}")
+        print(f"  95th percentile  : {qualified_95th[i]:.1f}")
+        print(f"  Failure prob (%) : {failure_prob[i]:.1f}\n")
+
+    print("Demographic Exposure Shares (mean over simulations):")
     for j, cell in enumerate(cells):
-        print(f"{cell}: {demo_mean[j]:.4f} (Target: {cell_shares[j]:.4f})") 
-    
+        print(f"  {cell}: {demo_mean[j]:.4f} (Target: {cell_shares[j]:.4f})")
+
+    # --- Optional: Aggregate summary ---
+    total_failures = (failure_prob > 5).sum()
+    print(f"\nNumber of categories with >5% failure probability: {total_failures} / {num_categories}")
+
+    return {
+        "qualified_mean": qualified_mean,
+        "qualified_median": qualified_median,
+        "qualified_5th": qualified_5th,
+        "qualified_95th": qualified_95th,
+        "failure_prob": failure_prob,
+        "mean_time_avg": mean_time_avg,
+        "demo_mean": demo_mean,
+    }

@@ -86,6 +86,7 @@ The solution includes:
 - Monte Carlo provides stochastic proof that targets are met with high probability.  
 - The greedy allocator provides a practical alternative for comparison and can be used in production when dynamic, real-time allocation of respondents is required.  
 - **Relaxed demographic assumption:** exact quota per cell is not strictly enforced, but exposure roughly matches national distribution.
+- A full report of the result can be find in [result_report.md](result_report.md)
 
 
 ---
