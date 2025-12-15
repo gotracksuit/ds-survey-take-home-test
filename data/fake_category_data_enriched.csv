@@ -1,0 +1,78 @@
+category_id,category_name,incidence_rate,category_length_seconds,gender_flag,age_flag
+1,Fertility or IVF service,0.095620843,164.50458,female,18-64
+2,Big and Tall Men's Clothing,0.131231474,69.82629947,male,na
+4,Self Tan (Female Only),0.19109589,115.9280045,female,18-64
+5,Baby Feeding,0.198450756,166.2311685,female,18-64
+6,Baby products,0.188132635,60.25228966,female,18-64
+7,Online Healthcare,0.226758485,164.7584527,na,18-64
+8,Funeral Services,0.273858921,171.7012903,na,65+
+9,Car Finance,0.23405324,129.1196689,male,18-64
+10,Designer Women's Clothing,0.251552795,124.3671066,female,na
+11,Nappies & wipes,0.244664237,39.26794057,na,18-64
+12,Car Rental,0.269535674,60.89618623,na,18-64
+13,Accounting Services (Sole Traders),0.24171123,56.48351288,na,na
+14,Weight-loss,0.231918997,133.053427,na,18-64
+15,Dark Spirits,0.301933874,87.61555773,male,na
+16,Fresh Coffee,0.321207962,145.476213,na,na
+17,Craft Beer,0.312757202,104.6548863,male,na
+18,Car & Motorhome Rentals,0.311028501,137.6427762,na,18-64
+19,Men's Online Health Providers,0.304926764,178.7859142,male,18-64
+20,Vocational Training,0.313074205,87.00527692,na,18-64
+21,Period Products,0.290499391,146.6167832,female,18-64
+22,Car Modifications,0.305242203,170.2057847,na,na
+23,Baby and Child Products,0.30846395,61.82137819,na,18-64
+24,Luxury Leather Bags/Accessories,0.275144509,127.7510649,female,18-64
+25,"Shares, brokers, and trading apps/website",0.320427236,48.83326439,male,18-64
+26,Online Betting Services,0.308978328,70.08310031,male,18-64
+27,Buy Now Pay Later (Gimmie),0.35035461,87.91711388,male,18-64
+28,Alcohol Free Drinks,0.41253508,32.00854997,na,18-64
+29,Pre-mixed alcoholic drinks/RTDs,0.401093892,87.35819356,na,18-64
+30,Buy Now Pay Later (Laybuy),0.394511149,160.4536269,na,18-64
+31,Men's Clothing (Male Only),0.327007299,81.0523495,male,18-64
+32,Meal Kit Delivery Service,0.363191043,102.3120173,na,18-64
+33,Recruitment,0.334335086,119.9348738,na,18-64
+34,Alcohol Free Beer,0.397292994,104.0311961,na,18-64
+35,Women's Activewear (Female Only),0.375,57.93264021,female,18-64
+36,"Shares, funds, and term deposits",0.390649762,154.1059978,na,na
+37,Beddings,0.417827298,130.2700107,na,na
+38,Natural Health Supplements,0.425092251,149.1359791,na,na
+39,White Spirits,0.411029412,46.19154388,na,na
+40,Free-from Baked Goods,0.441035475,138.5566419,na,na
+41,Camping Equipments,0.431192661,91.69116445,na,18-64
+42,Skincare,0.460633484,153.1419441,na,na
+43,Dog Food,0.411811652,127.0590291,na,na
+44,Female Skincare,0.443462898,147.4399143,female,na
+45,Skincare (Female Only),0.425631431,112.9554467,female,na
+46,Outdoor Pursuits Apparel,0.500968992,109.457937,na,na
+47,Nutrition & Fitness Services,0.485294118,148.4034348,na,na
+48,Female Clothing (Black Pepper),0.493953488,33.49968035,female,18-64
+49,Real Estate Service,0.485908649,101.5845098,na,na
+50,Peanut or Nut Butter,0.627352572,139.8470608,na,na
+51,Female Fashion,0.556831229,133.9097335,female,18-64
+52,Outdoor Apparel,0.639257294,101.6429433,na,18-64
+53,Prescription Eyewear,0.579009434,159.1814215,na,18-64
+54,Healthy Snacks,0.691394659,95.71456608,na,18-64
+55,Children's Television,0.497881356,66.71959155,na,18-64
+56,Mental Performance Supplements,0.571592211,40.60185707,na,18-64
+57,Indoor & Outdoor Cleaners,0.675174014,44.91992403,na,na
+58,Blinds & Window Furnishings,0.571589628,77.44075608,na,na
+59,Furniture & Homeware,0.610824742,107.7951395,na,na
+60,Suncare,0.617269545,129.3007615,na,na
+61,Umbrellas,0.534090909,91.02452808,female,na
+62,"Massage, beauty and Wellness Services",0.526607539,166.9313886,na,na
+63,Floor Cleaning Appliances,0.61199095,74.04050591,na,na
+64,Health & Beauty Retailers,0.849462366,98.85985894,female,na
+65,"Mattresses, beds, and pillows",0.712427746,79.85920113,na,na
+66,Chocolate,0.859133127,127.6305701,na,na
+67,Coffee,0.791291291,68.70251711,na,18-64
+68,Car Insurance,0.748466258,101.7817872,na,na
+69,Healthy Beverages,0.885174419,144.9466006,na,na
+70,"Chips, Crisps, Crackers",0.848787447,42.63703716,na,na
+71,Chocolate confectionery,0.787925697,161.2981995,na,18-64
+72,Sugar confectionery,0.73088685,80.86094068,na,18-64
+73,Wealth Management,0.803076923,155.9160525,na,na
+74,Chocolate bars and blocks,0.799435028,82.00252337,na,na
+75,Fast Food,0.790462428,80.06623962,na,18-64
+76,Eco Products,0.737226277,101.4526868,na,18-64
+77,Breakfast or Health Foods,0.766975309,163.8297504,na,18-64
+78,Kitchenware Retailers,0.684563758,159.6509206,na,18-64
