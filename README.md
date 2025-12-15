@@ -1,95 +1,152 @@
-# Tracksuit - Data Scientist (Survey) Interview: Technical Take Home
+# Survey Allocation Optimizer
 
-Hello, and thanks for taking the time to interview with us at Tracksuit! This is
-a take-home exercise we'd like you to complete. This is an open-ended problem
-that is designed to showcase your thoughtfulness and creativity. To avoid
-spending too much time on this task, we encourage you to timebox your work to a 
-few hours.
+*Tracksuit Data Scientist Take-Home Submission*
 
-<!-- deno-fmt-ignore-start -->
-> [!Note]
-> This task is meant to give us something to talk over in your technical
-> interview. It is a challenging but realistic example of the kind of
-> problems you may tackle at Tracksuit and you're encouraged to use AI
-> to assist you. Finally, remember: Nothing is designed to trick you.
-> If you have any questions, please reach out! 
-<!-- deno-fmt-ignore-end -->
+## The Challenge
 
+We need to get 200 qualified respondents for each of 77 different survey categories, while keeping the average survey time under 8 minutes. Main challenge is that each category has a different incidence rate (how many people qualify) and different survey lengths. Plus, we want to minimize the total number of respondents we survey (because that's our cost).
 
-## Background
+## The Approach
 
-Surveys are the heart of Tracksuit's operation. The way they are designed 
-affects our ability to develop new products, build trust with our customers, 
-and improve our cash flow. As Tracksuit continues to scale, automated 
-optimisation becomes an increasingly important contributor to our business.
+1. **Building 3 allocation algorithms** - from simple random baseline to a demographic-aware smart allocator (see `src/allocation_policies.py`)
+2. **Enriching the data** - added gender and age targeting flags to categories (because "Men's Clothing" shouldn't be shown to everyone)
+3. **Running experiments** - Some Monte Carlo simulations, statistical tests, and optimization to find the minimum sample size needed
+4. **Validating everything** - made sure all constraints are met and the results are reproducible
 
-One of the core functions of the survey team is to ensure that every customer 
-gets the sample size they need, while minimising surveying costs and 
-respecting the attention span of survey respondents. 
+The math behind it (for the curious):
+- **Input**: 77 categories with incidence rates $r_i$ and survey lengths $l_i$
+- **Constraints**: Mean survey time $leq$ 480s, $geq$ 200 qualified per category, demographically representative
+- **Objective**: Minimize total number of respondents while meeting all constraints
 
-This is tricky for three reasons:
+A more complete problem formulation in `FORMULATION.md` if you want the deep dive.
 
-1. **Every customer has a different category with a different incidence (qualifying) rate.**
+I mainly used Claude Code to help me with the code and it took ~2-3 hrs of working time.
 
-At Tracksuit, we guarantee each customer n=200 respondents that qualify for their category each month. When different categories have different incidence rates, we need to ask the category’s qualifying question to different numbers of respondents to get the same final result. 
-For example, if the Honey category has a 20% incidence rate and the Chips category has a 80% incidence rate, we’ll need to ask roughly 200/20%=1000 respondents the qualifying question for Honey, while we only need to ask roughly 200/80%=250 respondents the qualifying question for Chips.
+## Project Structure
 
-2. **Every customer’s survey length is different.**
+```
+├── src/                              # Core modules
+│   ├── allocation_policies.py        # The 3 allocation algorithms
+│   ├── data_loader.py                # Data loading & respondent generation
+│   ├── simulation.py                 # Qualification simulation logic
+│   ├── compare_datasets.py           # Statistical analysis of demographic enrichment
+│   └── bounds_calculation.py         # Theoretical bounds (optional utility)
+│
+├── experiments/                      # Experiment scripts
+│   ├── run_simulation.py             # CLI for quick tests
+│   ├── experiment.py                 # Find minimum N (binary search)
+│   ├── monte_carlo_experiment.py     # Monte Carlo sims with beautiful plots
+│   └── demographic_impact_analysis.py # Deep dive on demographic constraints
+│
+├── data/                             # Datasets
+│   ├── fake_category_data.csv        # Original data
+│   └── fake_category_data_enriched.csv # With gender/age flags
+│
+├── results/                          # Output visualizations
+│   ├── demographic_comparison.png
+│   └── demographic_impact_analysis.png
+│
+└── HOW_TO_RUN.md                     # Detailed guide for each script
+```
 
-While we ensure that every customer starts with the same standard set of questions, we allow customers the ability to add questions to their category to measure their unique brand goals. This means that, while basic categories might only last 45 seconds, a fully-fledge survey could take up to 3 minutes to complete.
+## Quick Start
 
-3. **The mean respondent can only have 8 minutes of questions.**
+We use Poetry to manage dependencies.
 
-To ensure that respondents are engaged for the length of the survey, we restrict the total survey length to 8 minutes per respondent. This means that we can’t ask infinite questions (or the same set number of categories) to every respondent. We’ll have to dynamically adjust based on the categories that they qualify for.
-The demographic distribution of the sample that is exposed to each category’s qualifier should be representative of the national population.
-While the demographic composition of those who qualify for each category will naturally vary (for example, the sample of those who qualify for “Men’s Clothing” will naturally skew more male than those for “Women’s Clothing), we want to make sure that those who had the chance to qualify are nationally representative. 
+```bash
+# Install dependencies
+poetry install
 
-In this task, imagine you’re a Data Scientist at Tracksuit designing 
-an algorithmic solution to this problem.
+# Run a quick test
+poetry run python experiments/run_simulation.py --policy demographic_aware --n 8000
+```
 
-## The Task
+## Running the Experiments
 
-The goal of this take-home task is to minimise the total number of respondents surveyed (our "cost") by designing, implementing, and validating an algorithm to automatically allocate categories to respondents while respecting the following constraints:
-- Every category should receive roughly 200 qualified respondents (we're modelling one month). In contracts, we specify that customers will receive at least 2,400 qualified respondents per year.
-- The mean respondents should have a total interview length of less than 480 seconds (8 minutes). This limit exists for two reasons: 1) to maintain data quality - we believe that respondent engagement starts to drop rapidly after an 8 minute survey - and, 2) because it's stipulated in our contractual agreement with our sample provider.
-*For simplicity, you may assume that the category qualifier consumes none of a respondent's time (0 seconds).*
-- The demographic distribution of the sample exposed to each category's qualifiers should match that of the national population (At Tracksuit, we quota for at least the gender, age, and region variables). We require this to avoid respondent bias and maintain best-in-class research practice.
+You can run the experiments by running the following commands:
 
-Since we'll be reviewing your work asynchronously, please ensure all work is committed to this repository. You're welcome to use your programming language and framework of choice but please ensure your full solution is reproducible from your code. 
+### 1. Compare Datasets (Validate Demographics)
+```bash
+poetry run python src/compare_datasets.py
+```
+**What it does:** Statistical analysis checking if gender/age flags meaningfully correlate with incident rates
 
-You're also more than welcome to use any AI tools (e.g. Cursor or Claude Code) to help you with this take home task, similarly to how you would as an employee at Tracksuit. However, similarly to any code you write at Tracksuit, you will be responsible for the quality of your code and your results. Make sure you can interpret and explain any code, assumptions, and results that you commit to this repository. Please note that we will be comparing your results to a naive Claude Code solution based on this repository. Your job is to inject additional insight or intuition that leads to outsized performance. 
+### 2. Quick Simulation (Test a Policy)
+```bash
+poetry run python experiments/run_simulation.py --policy demographic_aware --n 8000
+```
+**What it does:** Run a single policy with custom parameters.
 
-Validation is a critical part of this feature. As part of your submission, you should provide clear proof that your algorithm achieves each of the constraints listed above, using at least the `fake_category_data.csv` file.
+### 3. Find Minimum N (Optimization)
+```bash
+poetry run python experiments/experiment.py
+```
+**What it does:** Binary search to find the minimum respondents needed for each policy. This is where we see the winner.
 
-If you find that a full solution takes you more time than you have available, you may choose to add simplifying assumptions or relax set constraints to assist in your solution, as long as you justify your decision from both a customer and technical perspective in your presentation. This, too, will help us understand how you think about product scope and technical trade-offs.
+### 4. Monte Carlo Analysis (Data Visualizations)
+```bash
+poetry run python experiments/monte_carlo_experiment.py
+```
+**What it does:** 50 simulations across different sample sizes (2,000-12,000). Generates charts showing performance curves and variance. Takes ~5-10 minutes but worth it!
 
-To help you with this task, we have provided the following description of the data generating process.
+### 5. Demographic Impact Analysis (Deep Dive)
+```bash
+poetry run python experiments/demographic_impact_analysis.py
+```
+**What it does:** Compares allocation with/without demographic constraints. Shows which categories are helped or hurt by targeting, and whether we have pool depletion issues.
 
-### Understanding Categories
+## The 3 Allocation Algorithms
 
-Tracksuit categories are defined by a category qualifier. This is a question that specifies the purchase behavior required to "qualify" for the category. For example, the `Fast Food` category has the following category qualifier: "In the past 3 months have you purchased fast-food? (Note: this includes quick and convenient options such as sandwiches/wraps, pizza, burritos, salads, and burgers, etc)"
+I built and compared three strategies (all implemented in `src/allocation_policies.py`):
 
-Each category qualifier also comes with a set of answer options. For the `Fast Food` category above, the answer options are:
-- "Yes" (`Qualifying`), and 
-- "No"
+### 1. Random Allocation (Baseline)
+Your basic "shuffle and hope" approach. Randomly assigns categories to respondents, respecting only the time budget. This is our worst-case baseline to show how much smart allocation helps.
 
-The `Qualifying` label indicates that survey respondents who select "Yes" qualify for the category.
+### 2. Priority Greedy
+Prioritizes the hardest categories first (those with the lowest incidence rates need the most exposures). 
 
-By deploying the category qualifier with its associated answer options to a survey, we can measure the category's incidence rate. The incidence rate is the estimated percentage of the population that qualifies (selects a `Qualifying` response) to a given category qualifier. In the example above, we surveyed 8,952 people and 7,583 selected "Yes", leading to an estimated incidence rate of `7583/8952=84.71%`. 
+Uses a two-pass approach:
 
-After a respondent "qualifies" for a category, they are then eligible to respond to the category's survey. At Tracksuit, this means the set of questions that the customer of the category requested. For simplicity, we have omitted the specific questions for this task and provided an estimated `category_length_seconds` variable to represent the expected time taken for the mean respondent to complete the category survey.
+1. Fill each category to target, starting with hardest
+2. Fill remaining respondent time with any categories that fit
 
-For this task, assume that we guarantee customers at least n=2,400 qualified respondents who complete the category survey each year. Since we do monthly surveys, this translates to roughly n=200 per month. Of course, the number of respondents required to achieve the desired qualified respondents per month varies by incidence rate. For a category with an incidence rate of 10%, we'd need to survey roughly `200/10%=2000` respondents in order to receive 200 qualified respondents to complete the category survey. If a survey mechanism didn't require all qualifying survey respondents to complete the category survey, the required respondent number would increase even more.
+This is deterministic and efficient, but it ignores demographic targeting.
 
-We provide an example of a set of categories and their associated information in the spreadsheet `fake_category_data.csv`. You may use this data to assist in validating your algorithm.
+### 3. Demographic Aware (Recommended ⭐)
 
-Here is the associated data dictionary:
+Same priority logic as Priority Greedy, but respects demographic targeting:
 
-**_Data dictionary_**
-- category_id: the unique id for a category
-- category_name: the name for the category
-- incidence_rate: the estimated proportion of respondents from a population who would select a `qualifying` response to the category qualifier. For simplicity, we have omitted the category qualifiers and answer options themselves.
-- category_length_seconds: the estimated time taken for the mean respondent to complete the category survey.
+- Only shows male-targeted categories to male respondents
+- Only shows female-targeted categories to female respondents
+- Respects age targeting (18-64 vs 65+)
 
-We hope you enjoy this take home task. If you have any questions - please reach out! We look forward to reviewing your submission.
+This makes intuitive sense (don't show "Men's Clothing" to women) and performs better than the other two algorithms.
 
+## Results
+
+Running the experiments reveals the following results:
+
+**On Demographics:**
+- Gender and age flags DO matter - statistically significant differences in incident rates (run the `src/compare_datasets.py` script to see the details)
+- Gender-neutral categories have highest incident rates (0.53 avg) -- unsurprisingly
+- Male-targeted categories have lowest rates (0.29 avg) -- matches intuition
+
+**On Algorithm Performance:**
+- Demographic Aware needs fewer respondents than Priority Greedy
+- Random allocation is significantly worse (needs ~2x more respondents)
+- Monte Carlo simulations show reliable performance across multiple runs
+
+**On Constraints:**
+- All policies can meet the 200 qualified per category target as we increase the number of respondents (obviously)
+- Time budget (480s) is the binding constraint for most policies 
+- Demographic constraints slightly increase sample size needed but improve targeting quality (see `experiments/demographic_impact_analysis.py` for the details)
+
+See the experiment outputs and visualizations in `results/` for detailed metrics.
+
+---
+
+## Documentation
+
+- **HOW_TO_RUN.md** - Detailed walkthrough of each script with examples
+- **FORMULATION.md** - Mathematical problem formulation
+- **man/README.md** - Original assignment specification
