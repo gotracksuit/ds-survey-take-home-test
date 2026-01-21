@@ -1,10 +1,6 @@
 # Tracksuit - Data Scientist (Survey) Interview: Technical Take Home
 
-Hello, and thanks for taking the time to interview with us at Tracksuit! This is
-a take-home exercise we'd like you to complete. This is an open-ended problem
-that is designed to showcase your thoughtfulness and creativity. To avoid
-spending too much time on this task, we encourage you to timebox your work to a 
-few hours.
+Hello, and thanks for taking the time to interview with us at Tracksuit! This is a take-home exercise we'd like you to complete. This is an open-ended problem that is designed to showcase your thoughtfulness and creativity. To avoid spending too much time on this task, we encourage you to timebox your work to a few hours.
 
 <!-- deno-fmt-ignore-start -->
 > [!Note]
@@ -18,14 +14,9 @@ few hours.
 
 ## Background
 
-Surveys are the heart of Tracksuit's operation. The way they are designed 
-affects our ability to develop new products, build trust with our customers, 
-and improve our cash flow. As Tracksuit continues to scale, automated 
-optimisation becomes an increasingly important contributor to our business.
+Surveys are the heart of Tracksuit's operation. The way they are designed affects our ability to develop new products, build trust with our customers, and improve our cash flow. As Tracksuit continues to scale, automated optimisation becomes an increasingly important contributor to our business.
 
-One of the core functions of the survey team is to ensure that every customer 
-gets the sample size they need, while minimising surveying costs and 
-respecting the attention span of survey respondents. 
+One of the core functions of the survey team is to ensure that every customer gets the sample size they need, while minimising surveying costs and respecting the attention span of survey respondents. 
 
 This is tricky for three reasons:
 
@@ -40,19 +31,19 @@ While we ensure that every customer starts with the same standard set of questio
 
 3. **The mean respondent can only have 8 minutes of questions.**
 
-To ensure that respondents are engaged for the length of the survey, we restrict the total survey length to 8 minutes per respondent. This means that we can’t ask infinite questions (or the same set number of categories) to every respondent. We’ll have to dynamically adjust based on the categories that they qualify for.
+To ensure that respondents are engaged for the length of the survey, we restrict the total survey length to 8 minutes per respondent. In practice, this means you'll need to design survey structures (or multiple survey versions) that account for the probabilistic nature of qualification rates. Your solution should determine, before the month begins, how to structure surveys to achieve the desired outcomes. 
+
 The demographic distribution of the sample that is exposed to each category’s qualifier should be representative of the national population.
 While the demographic composition of those who qualify for each category will naturally vary (for example, the sample of those who qualify for “Men’s Clothing” will naturally skew more male than those for “Women’s Clothing), we want to make sure that those who had the chance to qualify are nationally representative. 
 
-In this task, imagine you’re a Data Scientist at Tracksuit designing 
-an algorithmic solution to this problem.
+In this task, imagine you’re a Data Scientist at Tracksuit designing an algorithmic solution to this problem.
 
 ## The Task
 
-The goal of this take-home task is to minimise the total number of respondents surveyed (our "cost") by designing, implementing, and validating an algorithm to automatically allocate categories to respondents while respecting the following constraints:
+The goal of this take-home task is to minimise the total number of respondents surveyed (our "cost") by designing, implementing, and validating a policy or algorithm that determines how to structure surveys before the month begins. This should define how categories are allocated to create survey structures that probabilistically achieve the desired outcomes while respecting the following constraints: 
 - Every category should receive roughly 200 qualified respondents (we're modelling one month). In contracts, we specify that customers will receive at least 2,400 qualified respondents per year.
 - The mean respondents should have a total interview length of less than 480 seconds (8 minutes). This limit exists for two reasons: 1) to maintain data quality - we believe that respondent engagement starts to drop rapidly after an 8 minute survey - and, 2) because it's stipulated in our contractual agreement with our sample provider.
-*For simplicity, you may assume that the category qualifier consumes none of a respondent's time (0 seconds).*
+*For simplicity, you may assume that the category qualifier consumes none of a respondent's time (0 seconds).However, note that in real-world implementation, there is a practical limit to how many qualifiers can be shown to a single respondent due to respondent burden and survey flow considerations. While your solution may leverage the 0-second assumption, strong candidates will consider how their approach would translate to real-world constraints.*
 - The demographic distribution of the sample exposed to each category's qualifiers should match that of the national population (At Tracksuit, we quota for at least the gender, age, and region variables). We require this to avoid respondent bias and maintain best-in-class research practice.
 
 Since we'll be reviewing your work asynchronously, please ensure all work is committed to this repository. You're welcome to use your programming language and framework of choice but please ensure your full solution is reproducible from your code. 
@@ -60,6 +51,7 @@ Since we'll be reviewing your work asynchronously, please ensure all work is com
 You're also more than welcome to use any AI tools (e.g. Cursor or Claude Code) to help you with this take home task, similarly to how you would as an employee at Tracksuit. However, similarly to any code you write at Tracksuit, you will be responsible for the quality of your code and your results. Make sure you can interpret and explain any code, assumptions, and results that you commit to this repository. Please note that we will be comparing your results to a naive Claude Code solution based on this repository. Your job is to inject additional insight or intuition that leads to outsized performance. 
 
 Validation is a critical part of this feature. As part of your submission, you should provide clear proof that your algorithm achieves each of the constraints listed above, using at least the `fake_category_data.csv` file.
+In particular, your validation should include a simulation that demonstrates how your pre-computed policy would perform over the course of a month, showing that it probabilistically meets all requirements.
 
 If you find that a full solution takes you more time than you have available, you may choose to add simplifying assumptions or relax set constraints to assist in your solution, as long as you justify your decision from both a customer and technical perspective in your presentation. This, too, will help us understand how you think about product scope and technical trade-offs.
 
