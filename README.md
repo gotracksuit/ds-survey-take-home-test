@@ -1,87 +1,144 @@
-# Tracksuit - Data Scientist (Survey) Interview: Technical Take Home
+# Survey Bundle Planner
 
-Hello, and thanks for taking the time to interview with us at Tracksuit! This is a take-home exercise we'd like you to complete. This is an open-ended problem that is designed to showcase your thoughtfulness and creativity. To avoid spending too much time on this task, we encourage you to timebox your work to a few hours.
+A bundle-based survey allocation system that minimises respondent costs while meeting qualified sample targets with statistical confidence.
 
-<!-- deno-fmt-ignore-start -->
-> [!Note]
-> This task is meant to give us something to talk over in your technical
-> interview. It is a challenging but realistic example of the kind of
-> problems you may tackle at Tracksuit and you're encouraged to use AI
-> to assist you. Finally, remember: Nothing is designed to trick you.
-> If you have any questions, please reach out! 
-<!-- deno-fmt-ignore-end -->
+## Requirements
+
+- Python 3.11+
+- Install dependencies: `pip install -r requirements.txt`
+
+## Objective
+
+Minimise total surveyed respondents (cost) while still meeting every customer's required qualified sample size and protecting respondent attention/quality.
+
+## Required Outcomes
+
+- Each category must achieve ~200 qualified respondents per month (one customer = one category)
+
+## Constraints
+
+| Constraint | Description |
+|------------|-------------|
+| **Mean interview time** | Must be < 480 seconds (8 minutes) per respondent |
+| **Per-category exposure representativeness** | For each category, respondents shown that category's qualifier must match national population distribution (gender, age, region) |
+| **Qualifier time** | Assumed to be 0 seconds (simplification), but practical limit exists on qualifiers per respondent (respondent burden) |
+
+## Policy Type (Static Planning)
+
+- Survey design must be decided **before the month begins**
+- Define survey structures/versions (bundles) and category allocations upfront
+- Execution should **not** rely on mid-month adaptive restructuring
+- Be a **pre-computed plan**
 
 
-## Background
+## Validation
 
-Surveys are the heart of Tracksuit's operation. The way they are designed affects our ability to develop new products, build trust with our customers, and improve our cash flow. As Tracksuit continues to scale, automated optimisation becomes an increasingly important contributor to our business.
+Simulation-based evidence (using `fake_category_data.csv`) that the fixed monthly plan meets:
+- ~200 qualified completes per category
+- Mean time < 8 minutes
+- Per-category exposure demographics are nationally representative
+- Report success probabilities/rates across simulation runs
 
-One of the core functions of the survey team is to ensure that every customer gets the sample size they need, while minimising surveying costs and respecting the attention span of survey respondents. 
+## Optional Design Extensions
 
-This is tricky for three reasons:
+| Feature | Description |
+|---------|-------------|
+| **Tail risk constraint** | Q95 interview time <= 720s (12 min) - prevents long-tail of burdened respondents |
+| **Valid response rate** | Enforce minimum valid response rate based on business rules (e.g., exclude low-quality completes) |
+| **Max qualifiers per respondent** | Max <= 10 qualifiers to reduce screening fatigue and maintain survey flow |
+| **Incidence rate seasonality** | Allow IR to vary by month/season (e.g., Suncare lower in winter) via seasonality model |
 
-1. **Every customer has a different category with a different incidence (qualifying) rate.**
+---
 
-At Tracksuit, we guarantee each customer n=200 respondents that qualify for their category each month. When different categories have different incidence rates, we need to ask the category’s qualifying question to different numbers of respondents to get the same final result. 
-For example, if the Honey category has a 20% incidence rate and the Chips category has a 80% incidence rate, we’ll need to ask roughly 200/20%=1000 respondents the qualifying question for Honey, while we only need to ask roughly 200/80%=250 respondents the qualifying question for Chips.
+## Policy Strategies
 
-2. **Every customer’s survey length is different.**
+The optimiser creates three bundle strategies and selects the one with lowest respondent count that meets all constraints:
 
-While we ensure that every customer starts with the same standard set of questions, we allow customers the ability to add questions to their category to measure their unique brand goals. This means that, while basic categories might only last 45 seconds, a fully-fledge survey could take up to 3 minutes to complete.
+| Strategy | Description |
+|----------|-------------|
+| **Plan A: Bottleneck First** | Prioritises low-IR categories (hardest to fill) by sorting by required exposures |
+| **Plan B: Efficiency First** | Prioritises high value-density categories (best demand/cost ratio) |
+| **Plan C: Balanced Interleaving** | Alternates between bottleneck and stable categories for variance reduction |
 
-3. **The mean respondent can only have 8 minutes of questions.**
+Each strategy partitions all categories into bundles (survey versions) where:
+- Each bundle respects max qualifiers (10) and expected time budget (480s)
+- Bundle sizes are computed using Bonferroni-adjusted confidence to ensure P(all categories meet target) >= 95%
 
-To ensure that respondents are engaged for the length of the survey, we restrict the total survey length to 8 minutes per respondent. In practice, this means you'll need to design survey structures (or multiple survey versions) that account for the probabilistic nature of qualification rates. Your solution should determine, before the month begins, how to structure surveys to achieve the desired outcomes. 
+---
 
-The demographic distribution of the sample that is exposed to each category’s qualifier should be representative of the national population.
-While the demographic composition of those who qualify for each category will naturally vary (for example, the sample of those who qualify for “Men’s Clothing” will naturally skew more male than those for “Women’s Clothing), we want to make sure that those who had the chance to qualify are nationally representative. 
+## How to Use
 
-In this task, imagine you’re a Data Scientist at Tracksuit designing an algorithmic solution to this problem.
+```bash
+# Basic run (random demographics sampling)
+python main.py
 
-## The Task
+# Quota sampling - guarantees exact demographic match per bundle
+python main.py --quota-sampling
 
-The goal of this take-home task is to minimise the total number of respondents surveyed (our "cost") by designing, implementing, and validating a policy or algorithm that determines how to structure surveys before the month begins. This should define how categories are allocated to create survey structures that probabilistically achieve the desired outcomes while respecting the following constraints: 
-- Every category should receive roughly 200 qualified respondents (we're modelling one month). In contracts, we specify that customers will receive at least 2,400 qualified respondents per year.
-- The mean respondents should have a total interview length of less than 480 seconds (8 minutes). This limit exists for two reasons: 1) to maintain data quality - we believe that respondent engagement starts to drop rapidly after an 8 minute survey - and, 2) because it's stipulated in our contractual agreement with our sample provider.
-*For simplicity, you may assume that the category qualifier consumes none of a respondent's time (0 seconds).However, note that in real-world implementation, there is a practical limit to how many qualifiers can be shown to a single respondent due to respondent burden and survey flow considerations. While your solution may leverage the 0-second assumption, strong candidates will consider how their approach would translate to real-world constraints.*
-- The demographic distribution of the sample exposed to each category's qualifiers should match that of the national population (At Tracksuit, we quota for at least the gender, age, and region variables). We require this to avoid respondent bias and maintain best-in-class research practice.
+# Custom demographic tolerance (default: 5%)
+python main.py --demographic-tolerance 0.05
 
-Since we'll be reviewing your work asynchronously, please ensure all work is committed to this repository. You're welcome to use your programming language and framework of choice but please ensure your full solution is reproducible from your code. 
+# Apply seasonality scenario
+python main.py --seasonality winter
 
-You're also more than welcome to use any AI tools (e.g. Cursor or Claude Code) to help you with this take home task, similarly to how you would as an employee at Tracksuit. However, similarly to any code you write at Tracksuit, you will be responsible for the quality of your code and your results. Make sure you can interpret and explain any code, assumptions, and results that you commit to this repository. Please note that we will be comparing your results to a naive Claude Code solution based on this repository. Your job is to inject additional insight or intuition that leads to outsized performance. 
+# Simulate data quality issues (90% valid completions)
+python main.py --valid-completion 0.9
 
-Validation is a critical part of this feature. As part of your submission, you should provide clear proof that your algorithm achieves each of the constraints listed above, using at least the `fake_category_data.csv` file.
-In particular, your validation should include a simulation that demonstrates how your pre-computed policy would perform over the course of a month, showing that it probabilistically meets all requirements.
+# More Monte Carlo runs for higher statistical precision
+python main.py --monte-carlo-runs 20
 
-If you find that a full solution takes you more time than you have available, you may choose to add simplifying assumptions or relax set constraints to assist in your solution, as long as you justify your decision from both a customer and technical perspective in your presentation. This, too, will help us understand how you think about product scope and technical trade-offs.
+# Combined options
+python main.py --quota-sampling --seasonality winter
+```
 
-To help you with this task, we have provided the following description of the data generating process.
+---
 
-### Understanding Categories
+## Example Results
 
-Tracksuit categories are defined by a category qualifier. This is a question that specifies the purchase behavior required to "qualify" for the category. For example, the `Fast Food` category has the following category qualifier: "In the past 3 months have you purchased fast-food? (Note: this includes quick and convenient options such as sandwiches/wraps, pizza, burritos, salads, and burgers, etc)"
+### Default (random sampling)
+```bash
+python main.py
+```
+**Result:** No plan meets 95% confidence due to demographic variance in small bundles. Consider using `--quota-sampling`.
 
-Each category qualifier also comes with a set of answer options. For the `Fast Food` category above, the answer options are:
-- "Yes" (`Qualifying`), and 
-- "No"
+### With quota sampling
+```bash
+python main.py --quota-sampling
+```
+**Result:** Plan B passes all constraints with lowest N = **8,341** respondents
+- Output: `results/bundle_plan.csv`, `results/bundle_summary.csv`
 
-The `Qualifying` label indicates that survey respondents who select "Yes" qualify for the category.
+### With seasonality (winter)
+```bash
+python main.py --quota-sampling --seasonality winter
+```
+**Result:** Plan B passes all constraints with lowest N = **8,261** respondents
+- Output: `results/bundle_plan_winter.csv`, `results/bundle_summary_winter.csv`
+- Suncare IR drops 50%, Coffee IR increases 25%, etc.
 
-By deploying the category qualifier with its associated answer options to a survey, we can measure the category's incidence rate. The incidence rate is the estimated percentage of the population that qualifies (selects a `Qualifying` response) to a given category qualifier. In the example above, we surveyed 8,952 people and 7,583 selected "Yes", leading to an estimated incidence rate of `7583/8952=84.71%`. 
+---
 
-After a respondent "qualifies" for a category, they are then eligible to respond to the category's survey. At Tracksuit, this means the set of questions that the customer of the category requested. For simplicity, we have omitted the specific questions for this task and provided an estimated `category_length_seconds` variable to represent the expected time taken for the mean respondent to complete the category survey.
+## Output Files
 
-For this task, assume that we guarantee customers at least n=2,400 qualified respondents who complete the category survey each year. Since we do monthly surveys, this translates to roughly n=200 per month. Of course, the number of respondents required to achieve the desired qualified respondents per month varies by incidence rate. For a category with an incidence rate of 10%, we'd need to survey roughly `200/10%=2000` respondents in order to receive 200 qualified respondents to complete the category survey. If a survey mechanism didn't require all qualifying survey respondents to complete the category survey, the required respondent number would increase even more.
+All outputs are saved to the `results/` folder:
 
-We provide an example of a set of categories and their associated information in the spreadsheet `fake_category_data.csv`. You may use this data to assist in validating your algorithm.
+| File | Description |
+|------|-------------|
+| `results/bundle_plan.csv` | Detailed plan with (bundle_id, category_id, planned_respondents, IR, survey_length) |
+| `results/bundle_summary.csv` | One row per bundle with category list and respondent count |
 
-Here is the associated data dictionary:
+---
 
-**_Data dictionary_**
-- category_id: the unique id for a category
-- category_name: the name for the category
-- incidence_rate: the estimated proportion of respondents from a population who would select a `qualifying` response to the category qualifier. For simplicity, we have omitted the category qualifiers and answer options themselves.
-- category_length_seconds: the estimated time taken for the mean respondent to complete the category survey.
+## Project Structure
 
-We hope you enjoy this take home task. If you have any questions - please reach out! We look forward to reviewing your submission.
-
+```
+├── main.py           # Entry point and CLI
+├── bundle_engine.py  # Bundle creation, sizing, simulation, Monte Carlo
+├── data_loader.py    # Load category data with seasonality
+├── reporting.py      # Output formatting and validation reports
+├── config.py         # Configuration parameters
+├── requirements.txt  # Python dependencies
+├── fake_category_data.csv  # Input category data
+├── results/          # Output folder for bundle plans
+└── CHALLENGE.md      # Original challenge description
+```
