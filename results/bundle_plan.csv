@@ -1,0 +1,78 @@
+bundle_id,planned_respondents,expected_time,num_categories,category_id,category_name,incidence_rate,survey_length_seconds
+1,2612,145.98,10,2,Big and Tall Men's Clothing,0.1312,69.83
+1,2612,145.98,10,1,Fertility or IVF service,0.0956,164.5
+1,2612,145.98,10,6,Baby products,0.1881,60.25
+1,2612,145.98,10,11,Nappies & wipes,0.2447,39.27
+1,2612,145.98,10,13,Accounting Services (Sole Traders),0.2417,56.48
+1,2612,145.98,10,4,Self Tan (Female Only),0.1911,115.93
+1,2612,145.98,10,12,Car Rental,0.2695,60.9
+1,2612,145.98,10,25,"Shares, brokers, and trading apps/website",0.3204,48.83
+1,2612,145.98,10,28,Alcohol Free Drinks,0.4125,32.01
+1,2612,145.98,10,23,Baby and Child Products,0.3085,61.82
+2,1220,268.08,10,5,Baby Feeding,0.1985,166.23
+2,1220,268.08,10,26,Online Betting Services,0.309,70.08
+2,1220,268.08,10,9,Car Finance,0.2341,129.12
+2,1220,268.08,10,14,Weight-loss,0.2319,133.05
+2,1220,268.08,10,39,White Spirits,0.411,46.19
+2,1220,268.08,10,10,Designer Women's Clothing,0.2516,124.37
+2,1220,268.08,10,15,Dark Spirits,0.3019,87.62
+2,1220,268.08,10,35,Women's Activewear (Female Only),0.375,57.93
+2,1220,268.08,10,48,Female Clothing (Black Pepper),0.494,33.5
+2,1220,268.08,10,7,Online Healthcare,0.2268,164.76
+3,878,348.16,10,20,Vocational Training,0.3131,87.01
+3,878,348.16,10,31,Men's Clothing (Male Only),0.327,81.05
+3,878,348.16,10,24,Luxury Leather Bags/Accessories,0.2751,127.75
+3,878,348.16,10,17,Craft Beer,0.3128,104.65
+3,878,348.16,10,27,Buy Now Pay Later (Gimmie),0.3504,87.92
+3,878,348.16,10,21,Period Products,0.2905,146.62
+3,878,348.16,10,8,Funeral Services,0.2739,171.7
+3,878,348.16,10,56,Mental Performance Supplements,0.5716,40.6
+3,878,348.16,10,18,Car & Motorhome Rentals,0.311,137.64
+3,878,348.16,10,33,Recruitment,0.3343,119.93
+4,784,417.89,10,32,Meal Kit Delivery Service,0.3632,102.31
+4,784,417.89,10,29,Pre-mixed alcoholic drinks/RTDs,0.4011,87.36
+4,784,417.89,10,16,Fresh Coffee,0.3212,145.48
+4,784,417.89,10,22,Car Modifications,0.3052,170.21
+4,784,417.89,10,34,Alcohol Free Beer,0.3973,104.03
+4,784,417.89,10,55,Children's Television,0.4979,66.72
+4,784,417.89,10,19,Men's Online Health Providers,0.3049,178.79
+4,784,417.89,10,41,Camping Equipments,0.4312,91.69
+4,784,417.89,10,57,Indoor & Outdoor Cleaners,0.6752,44.92
+4,784,417.89,10,45,Skincare (Female Only),0.4256,112.96
+5,608,435.89,8,43,Dog Food,0.4118,127.06
+5,608,435.89,8,37,Beddings,0.4178,130.27
+5,608,435.89,8,36,"Shares, funds, and term deposits",0.3906,154.11
+5,608,435.89,8,49,Real Estate Service,0.4859,101.58
+5,608,435.89,8,30,Buy Now Pay Later (Laybuy),0.3945,160.45
+5,608,435.89,8,58,Blinds & Window Furnishings,0.5716,77.44
+5,608,435.89,8,61,Umbrellas,0.5341,91.02
+5,608,435.89,8,38,Natural Health Supplements,0.4251,149.14
+6,531,471.24,8,40,Free-from Baked Goods,0.441,138.56
+6,531,471.24,8,46,Outdoor Pursuits Apparel,0.501,109.46
+6,531,471.24,8,63,Floor Cleaning Appliances,0.612,74.04
+6,531,471.24,8,44,Female Skincare,0.4435,147.44
+6,531,471.24,8,70,"Chips, Crisps, Crackers",0.8488,42.64
+6,531,471.24,8,42,Skincare,0.4606,153.14
+6,531,471.24,8,47,Nutrition & Fitness Services,0.4853,148.4
+6,531,471.24,8,59,Furniture & Homeware,0.6108,107.8
+7,442,463.98,7,65,"Mattresses, beds, and pillows",0.7124,79.86
+7,442,463.98,7,51,Female Fashion,0.5568,133.91
+7,442,463.98,7,52,Outdoor Apparel,0.6393,101.64
+7,442,463.98,7,67,Coffee,0.7913,68.7
+7,442,463.98,7,72,Sugar confectionery,0.7309,80.86
+7,442,463.98,7,54,Healthy Snacks,0.6914,95.71
+7,442,463.98,7,62,"Massage, beauty and Wellness Services",0.5266,166.93
+8,401,463.35,6,60,Suncare,0.6173,129.3
+8,401,463.35,6,75,Fast Food,0.7905,80.07
+8,401,463.35,6,74,Chocolate bars and blocks,0.7994,82.0
+8,401,463.35,6,53,Prescription Eyewear,0.579,159.18
+8,401,463.35,6,76,Eco Products,0.7372,101.45
+8,401,463.35,6,50,Peanut or Nut Butter,0.6274,139.85
+9,331,379.1,4,68,Car Insurance,0.7485,101.78
+9,331,379.1,4,64,Health & Beauty Retailers,0.8495,98.86
+9,331,379.1,4,78,Kitchenware Retailers,0.6846,159.65
+9,331,379.1,4,66,Chocolate,0.8591,127.63
+10,290,377.96,3,77,Breakfast or Health Foods,0.767,163.83
+10,290,377.96,3,71,Chocolate confectionery,0.7879,161.3
+10,290,377.96,3,73,Wealth Management,0.8031,155.92
+11,244,128.3,1,69,Healthy Beverages,0.8852,144.95

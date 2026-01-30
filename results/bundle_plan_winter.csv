@@ -1,0 +1,78 @@
+bundle_id,planned_respondents,expected_time,num_categories,category_id,category_name,incidence_rate,survey_length_seconds
+1,2612,450.08,7,1,Fertility or IVF service,0.0956,164.5
+1,2612,450.08,7,71,Chocolate confectionery,0.9061,161.3
+1,2612,450.08,7,4,Self Tan (Female Only),0.1147,115.93
+1,2612,450.08,7,69,Healthy Beverages,0.8852,144.95
+1,2612,450.08,7,2,Big and Tall Men's Clothing,0.1312,69.83
+1,2612,450.08,7,66,Chocolate,0.988,127.63
+1,2612,450.08,7,6,Baby products,0.1881,60.25
+2,1220,461.36,6,77,Breakfast or Health Foods,0.767,163.83
+2,1220,461.36,6,5,Baby Feeding,0.1985,166.23
+2,1220,461.36,6,73,Wealth Management,0.8031,155.92
+2,1220,461.36,6,7,Online Healthcare,0.2268,164.76
+2,1220,461.36,6,78,Kitchenware Retailers,0.6846,159.65
+2,1220,461.36,6,14,Weight-loss,0.2319,133.05
+3,1036,436.55,8,53,Prescription Eyewear,0.579,159.18
+3,1036,436.55,8,9,Car Finance,0.2341,129.12
+3,1036,436.55,8,62,"Massage, beauty and Wellness Services",0.5266,166.93
+3,1036,436.55,8,13,Accounting Services (Sole Traders),0.2417,56.48
+3,1036,436.55,8,50,Peanut or Nut Butter,0.6274,139.85
+3,1036,436.55,8,11,Nappies & wipes,0.2447,39.27
+3,1036,436.55,8,64,Health & Beauty Retailers,0.8495,98.86
+3,1036,436.55,8,10,Designer Women's Clothing,0.2516,124.37
+4,896,438.74,8,68,Car Insurance,0.7485,101.78
+4,896,438.74,8,12,Car Rental,0.2695,60.9
+4,896,438.74,8,76,Eco Products,0.7372,101.45
+4,896,438.74,8,8,Funeral Services,0.2739,171.7
+4,896,438.74,8,51,Female Fashion,0.5568,133.91
+4,896,438.74,8,24,Luxury Leather Bags/Accessories,0.2751,127.75
+4,896,438.74,8,47,Nutrition & Fitness Services,0.4853,148.4
+4,896,438.74,8,21,Period Products,0.2905,146.62
+5,798,428.72,8,42,Skincare,0.4606,153.14
+5,798,428.72,8,15,Dark Spirits,0.3019,87.62
+5,798,428.72,8,54,Healthy Snacks,0.6914,95.71
+5,798,428.72,8,41,Camping Equipments,0.3018,91.69
+5,798,428.72,8,59,Furniture & Homeware,0.6108,107.8
+5,798,428.72,8,22,Car Modifications,0.3052,170.21
+5,798,428.72,8,74,Chocolate bars and blocks,0.7994,82.0
+5,798,428.72,8,19,Men's Online Health Providers,0.3049,178.79
+6,777,476.78,10,44,Female Skincare,0.4435,147.44
+6,777,476.78,10,60,Suncare,0.3086,129.3
+6,777,476.78,10,67,Coffee,0.9495,68.7
+6,777,476.78,10,23,Baby and Child Products,0.3085,61.82
+6,777,476.78,10,38,Natural Health Supplements,0.4251,149.14
+6,777,476.78,10,26,Online Betting Services,0.309,70.08
+6,777,476.78,10,30,Buy Now Pay Later (Laybuy),0.3945,160.45
+6,777,476.78,10,18,Car & Motorhome Rentals,0.311,137.64
+6,777,476.78,10,75,Fast Food,0.7905,80.07
+6,777,476.78,10,17,Craft Beer,0.3128,104.65
+7,761,438.99,10,40,Free-from Baked Goods,0.441,138.56
+7,761,438.99,10,20,Vocational Training,0.3131,87.01
+7,761,438.99,10,36,"Shares, funds, and term deposits",0.3906,154.11
+7,761,438.99,10,25,"Shares, brokers, and trading apps/website",0.3204,48.83
+7,761,438.99,10,37,Beddings,0.4596,130.27
+7,761,438.99,10,31,Men's Clothing (Male Only),0.327,81.05
+7,761,438.99,10,72,Sugar confectionery,0.7309,80.86
+7,761,438.99,10,33,Recruitment,0.3343,119.93
+7,761,438.99,10,16,Fresh Coffee,0.4015,145.48
+7,761,438.99,10,27,Buy Now Pay Later (Gimmie),0.3504,87.92
+8,650,413.41,10,65,"Mattresses, beds, and pillows",0.7124,79.86
+8,650,413.41,10,32,Meal Kit Delivery Service,0.3632,102.31
+8,650,413.41,10,43,Dog Food,0.4118,127.06
+8,650,413.41,10,35,Women's Activewear (Female Only),0.375,57.93
+8,650,413.41,10,52,Outdoor Apparel,0.5114,101.64
+8,650,413.41,10,34,Alcohol Free Beer,0.3973,104.03
+8,650,413.41,10,49,Real Estate Service,0.4859,101.58
+8,650,413.41,10,29,Pre-mixed alcoholic drinks/RTDs,0.4011,87.36
+8,650,413.41,10,61,Umbrellas,0.5341,91.02
+8,650,413.41,10,39,White Spirits,0.411,46.19
+9,575,336.96,10,45,Skincare (Female Only),0.4256,112.96
+9,575,336.96,10,28,Alcohol Free Drinks,0.4125,32.01
+9,575,336.96,10,46,Outdoor Pursuits Apparel,0.4258,109.46
+9,575,336.96,10,48,Female Clothing (Black Pepper),0.494,33.5
+9,575,336.96,10,63,Floor Cleaning Appliances,0.612,74.04
+9,575,336.96,10,55,Children's Television,0.4979,66.72
+9,575,336.96,10,58,Blinds & Window Furnishings,0.5716,77.44
+9,575,336.96,10,56,Mental Performance Supplements,0.5716,40.6
+9,575,336.96,10,70,"Chips, Crisps, Crackers",0.8488,42.64
+9,575,336.96,10,57,Indoor & Outdoor Cleaners,0.6752,44.92
