@@ -1,4 +1,4 @@
-# Tracksuit - Data Scientist (Survey) Interview: Technical Take Home
+# Instructions
 
 Hello, and thanks for taking the time to interview with us at Tracksuit! This is a take-home exercise we'd like you to complete. This is an open-ended problem that is designed to showcase your thoughtfulness and creativity. To avoid spending too much time on this task, we encourage you to timebox your work to a few hours.
 
@@ -10,7 +10,6 @@ Hello, and thanks for taking the time to interview with us at Tracksuit! This is
 > to assist you. Finally, remember: Nothing is designed to trick you.
 > If you have any questions, please reach out! 
 <!-- deno-fmt-ignore-end -->
-
 
 ## Background
 
